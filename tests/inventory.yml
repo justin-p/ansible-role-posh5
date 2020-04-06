@@ -1,0 +1,49 @@
+all:
+  children:
+    windowsserver:
+      hosts:
+        Server2019:
+          ansible_host: 192.168.56.10
+          vagrant_box: jborean93/WindowsServer2019
+        #Server2016:
+        #  ansible_host: 192.168.57.10
+        #  vagrant_box: jborean93/WindowsServer2016
+        #Server2012R2:
+        #  ansible_host: 192.168.58.10
+        #  vagrant_box: jborean93/WindowsServer2012R2
+        #Server2012:
+        #  ansible_host: 192.168.59.10
+        #  vagrant_box: jborean93/WindowsServer2012
+        #Server2008R2:
+        #  ansible_host: 192.168.60.10
+        #  vagrant_box: jborean93/WindowsServer2008R2                                        
+        #Server2008x64:
+        #  ansible_host: 192.168.61.10
+        #  vagrant_box: jborean93/WindowsServer2008-x64
+        #Server2008x86:
+        #  ansible_host: 192.168.62.10
+        #  vagrant_box: jborean93/WindowsServer2008-x86          
+  vars:
+    ansible_user: vagrant
+    ansible_password: vagrant
+    ansible_connection: winrm
+    ansible_port: 5986
+    ansible_winrm_transport: basic
+    ansible_winrm_server_cert_validation: ignore
+    vagrant_ports:
+      rdp:
+        guest: 3389
+        host: 29500
+      ssh:
+        guest: 22
+        host: 29600
+      winrm_http:
+        guest: 5985
+        host: 29700
+      winrm_https:
+        guest: 5986
+        host: 29800
+      smb:
+        guest: 445
+        host: 29900
+    include_vars: '../vars/main.yml'

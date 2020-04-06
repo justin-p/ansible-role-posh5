@@ -1,0 +1,95 @@
+---
+# tasks file for posh5
+- name: Ensure Windows Management Framework/PowerShell 5.1 are installed
+  win_chocolatey:
+    name: powershell
+    state: present
+  become: yes
+  become_user: "{{ ansible_user }}"
+  become_method: runas
+  register: wmf_install
+
+- name: Reboot if upgrade to Windows Management Framework/PowerShell 5.1 was required
+  win_reboot:
+    post_reboot_delay: 300
+  when: wmf_install.changed == true and wmf_install.rc == 3010
+
+- name: Ensure strong cryptography is set for .Net Framework (x86 and x64, Version 4 and above)
+  win_regedit:
+    path: "{{ item }}"
+    name: SchUseStrongCrypto
+    data: 1
+    type: dword
+  with_items: 
+    - HKLM:\SOFTWARE\Microsoft\.NetFramework\v4.0.30319
+    - HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NetFramework\v4.0.30319
+
+- name: Ensure NuGet Package Provider is installed
+  win_shell: |
+    $PackageProvider = Get-PackageProvider -ListAvailable | Where-Object {($_.name -eq 'Nuget') -and ($_.version -ge "2.8.5.201")}
+    If (-not ($PackageProvider)){
+      Try {
+        [void](Install-PackageProvider -Name NuGet -Scope AllUsers -MinimumVersion 2.8.5.201 -Confirm:$False -ErrorAction Stop -Force)
+        exit 1
+      } Catch {
+         exit 2
+      }
+    } Else {
+      exit 0
+    }
+  register: package_provider
+  changed_when: package_provider.rc == 1  
+  failed_when: package_provider.rc == 2
+
+- name: Ensure Powershell Gallery is installed
+  win_shell: |
+    $PowershellGallery = Get-PSRepository | Where-Object {$_.name -eq 'PSGallery'}
+     if (-not ($PowershellGallery)){
+      Try {
+        If ( $($PSVersionTable.PSVersion).major -le 4) {
+          [void](Register-PSRepository -Name PSGallery -SourceLocation https://www.powershellgallery.com/api/v2/ -InstallationPolicy Trusted)
+        } Else {
+          [void](Register-PSRepository -Default -InstallationPolicy Trusted)
+        }
+        exit 1
+      }
+      Catch {
+        exit 2
+      }
+     } ElseIf ($PowershellGallery.InstallationPolicy -ne 'Trusted') {
+        Try {
+          [void](Set-PSRepository -Name PSGallery -InstallationPolicy Trusted)
+          exit 1
+        }
+       Catch {
+        exit 2
+       }        
+     }
+     Else {
+      exit 0
+     }
+  register: powershell_gallery
+  changed_when: powershell_gallery.rc == 1  
+  failed_when: powershell_gallery.rc == 2
+
+- name: Ensure PowershellGet PowerShell Module is installed
+  win_shell: |
+    Try { 
+      Import-Module PowerShellGet -ErrorAction stop
+      exit 0
+    } Catch {
+      Try {
+        [void](Install-Module -Name PowerShellGet -Force)
+        exit 1
+      } Catch {
+        exit 2
+      }
+    }
+  register: powershell_get
+  changed_when: powershell_get.rc == 1  
+  failed_when: powershell_get.rc == 2
+
+- name: Ensure PSReadline PowerShell Module is installed
+  win_psmodule:
+    name: PSReadLine
+    state: present
