@@ -14,5 +14,5 @@ galaxy_info:
      - 2012R2
      - 2016
      - 2019
-  galaxy_tags: ["powershell","powershell5","posh","posh5","windowsmanagementframework","wmf"]
+  galaxy_tags: ["powershell", "powershell5", "posh", "posh5", "windowsmanagementframework", "wmf"]
 dependencies: []
