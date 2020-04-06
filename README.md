@@ -1,4 +1,4 @@
-# Create primary domain controller
+# ansible-posh5
 
 This role will update PowerShell/Windows Management Framework to Version 5.1, enure that .Net applications use Strong TLS, configure NuGet, PowerShell Gallery, PowerShellGet and install the PSReadline Module.
 All of this ensures that PowerShell functions like it does on modern windows Systems. This ensures you can use `Install-Module` and by extend `win_psmodule` to install PowerShell modules or DSCs on older versions of Windows without any additional manual configuration.
