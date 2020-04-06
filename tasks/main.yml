@@ -8,11 +8,10 @@
   become_user: "{{ ansible_user }}"
   become_method: runas
   register: wmf_install
+  notify: Reboot if upgrade to Windows Management Framework/PowerShell 5.1 was required
 
-- name: Reboot if upgrade to Windows Management Framework/PowerShell 5.1 was required
-  win_reboot:
-    post_reboot_delay: 300
-  when: wmf_install.changed == true and wmf_install.rc == 3010
+- name: Force all notified handlers to run at this point, not waiting for normal sync points
+  meta: flush_handlers
 
 - name: Ensure strong cryptography is set for .Net Framework (x86 and x64, Version 4 and above)
   win_regedit:
@@ -20,7 +19,7 @@
     name: SchUseStrongCrypto
     data: 1
     type: dword
-  with_items: 
+  with_items:
     - HKLM:\SOFTWARE\Microsoft\.NetFramework\v4.0.30319
     - HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NetFramework\v4.0.30319
 
@@ -38,7 +37,7 @@
       exit 0
     }
   register: package_provider
-  changed_when: package_provider.rc == 1  
+  changed_when: package_provider.rc == 1
   failed_when: package_provider.rc == 2
 
 - name: Ensure Powershell Gallery is installed
@@ -47,9 +46,9 @@
      if (-not ($PowershellGallery)){
       Try {
         If ( $($PSVersionTable.PSVersion).major -le 4) {
-          [void](Register-PSRepository -Name PSGallery -SourceLocation https://www.powershellgallery.com/api/v2/ -InstallationPolicy Trusted)
+          [void](Register-PSRepository -Name PSGallery -SourceLocation https://www.powershellgallery.com/api/v2/ -InstallationPolicy Trusted -ErrorAction Stop)
         } Else {
-          [void](Register-PSRepository -Default -InstallationPolicy Trusted)
+          [void](Register-PSRepository -Default -InstallationPolicy Trusted -ErrorAction Stop)
         }
         exit 1
       }
@@ -58,35 +57,35 @@
       }
      } ElseIf ($PowershellGallery.InstallationPolicy -ne 'Trusted') {
         Try {
-          [void](Set-PSRepository -Name PSGallery -InstallationPolicy Trusted)
+          [void](Set-PSRepository -Name PSGallery -InstallationPolicy Trusted -ErrorAction Stop)
           exit 1
         }
        Catch {
         exit 2
-       }        
+       }
      }
      Else {
       exit 0
      }
   register: powershell_gallery
-  changed_when: powershell_gallery.rc == 1  
+  changed_when: powershell_gallery.rc == 1
   failed_when: powershell_gallery.rc == 2
 
 - name: Ensure PowershellGet PowerShell Module is installed
   win_shell: |
-    Try { 
+    Try {
       Import-Module PowerShellGet -ErrorAction stop
       exit 0
     } Catch {
       Try {
-        [void](Install-Module -Name PowerShellGet -Force)
+        [void](Install-Module -Name PowerShellGet -ErrorAction Stop -Force)
         exit 1
       } Catch {
         exit 2
       }
     }
   register: powershell_get
-  changed_when: powershell_get.rc == 1  
+  changed_when: powershell_get.rc == 1
   failed_when: powershell_get.rc == 2
 
 - name: Ensure PSReadline PowerShell Module is installed

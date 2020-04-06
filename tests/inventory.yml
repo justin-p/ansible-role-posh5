@@ -2,15 +2,15 @@ all:
   children:
     windowsserver:
       hosts:
-        Server2019:
-          ansible_host: 192.168.56.10
-          vagrant_box: jborean93/WindowsServer2019
+        #Server2019:
+        #  ansible_host: 192.168.56.10
+        #  vagrant_box: jborean93/WindowsServer2019
         #Server2016:
         #  ansible_host: 192.168.57.10
         #  vagrant_box: jborean93/WindowsServer2016
-        #Server2012R2:
-        #  ansible_host: 192.168.58.10
-        #  vagrant_box: jborean93/WindowsServer2012R2
+        Server2012R2:
+          ansible_host: 192.168.58.10
+          vagrant_box: jborean93/WindowsServer2012R2
         #Server2012:
         #  ansible_host: 192.168.59.10
         #  vagrant_box: jborean93/WindowsServer2012
