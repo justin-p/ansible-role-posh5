@@ -1,4 +1,5 @@
 galaxy_info:
+  role_name: posh5
   author: Justin Perdok
   description: Upgrade to WMF/PowerShell 5.1
   company: Orange Cyberdefense
