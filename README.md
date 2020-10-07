@@ -1,5 +1,7 @@
 # ansible-role-posh5
 
+
+![Github Actions](https://img.shields.io/github/workflow/status/justin-p/ansible-role-posh5/CI?label=Github%20Actions&logo=github&style=flat-square)
 ![Travis](https://img.shields.io/travis/justin-p/ansible-role-posh5?label=Travis&logo=travis&style=flat-square)
 
 This role will update PowerShell/Windows Management Framework to Version 5.1, enure that .Net applications use Strong TLS, configure NuGet, PowerShell Gallery, PowerShellGet and install the PSReadline Module.
