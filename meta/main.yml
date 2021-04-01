@@ -1,6 +1,7 @@
 galaxy_info:
   role_name: posh5
   author: Justin Perdok
+  namespace: justin_p
   description: Upgrade to WMF/PowerShell 5.1
   company: Orange Cyberdefense
   license: MIT
