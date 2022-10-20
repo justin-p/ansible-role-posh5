@@ -1,7 +1,7 @@
 ---
 # tasks file for posh5
 - name: Ensure Windows Management Framework/PowerShell 5.1 are installed
-  win_chocolatey:
+  ansible.windows.win_chocolatey:
     name: powershell
     state: present
   become: yes
@@ -11,10 +11,10 @@
   notify: Reboot if upgrade to Windows Management Framework/PowerShell 5.1 was required
 
 - name: Force all notified handlers to run at this point, not waiting for normal sync points
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Ensure strong cryptography is set for .Net Framework (x86 and x64, Version 4 and above)
-  win_regedit:
+  ansible.windows.win_regedit:
     path: "{{ item }}"
     name: SchUseStrongCrypto
     data: 1
@@ -24,7 +24,7 @@
     - HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NetFramework\v4.0.30319
 
 - name: Ensure NuGet Package Provider is installed
-  win_shell: |
+  ansible.windows.win_shell: |
     $PackageProvider = Get-PackageProvider -ListAvailable | Where-Object {($_.name -eq 'Nuget') -and ($_.version -ge "2.8.5.201")}
     If (-not ($PackageProvider)){
       Try {
@@ -41,7 +41,7 @@
   failed_when: package_provider.rc == 2
 
 - name: Ensure Powershell Gallery is installed
-  win_shell: |
+  ansible.windows.win_shell: |
     $PowershellGallery = Get-PSRepository | Where-Object {$_.name -eq 'PSGallery'}
      if (-not ($PowershellGallery)){
       Try {
@@ -72,7 +72,7 @@
   failed_when: powershell_gallery.rc == 2
 
 - name: Ensure PowershellGet PowerShell Module is installed
-  win_shell: |
+  ansible.windows.win_shell: |
     Try {
       Import-Module PowerShellGet -ErrorAction stop
       exit 0
@@ -89,6 +89,6 @@
   failed_when: powershell_get.rc == 2
 
 - name: Ensure PSReadline PowerShell Module is installed
-  win_psmodule:
+  ansible.windows.win_psmodule:
     name: PSReadLine
     state: present
