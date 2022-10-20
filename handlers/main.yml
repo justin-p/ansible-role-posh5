@@ -1,4 +1,4 @@
 - name: Reboot if upgrade to Windows Management Framework/PowerShell 5.1 was required
-  win_reboot:
+  ansible.windows.win_reboot:
     post_reboot_delay: 300
   when: wmf_install.changed and wmf_install.rc == 3010
