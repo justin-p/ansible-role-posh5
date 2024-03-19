@@ -1,9 +1,8 @@
 # ansible-role-posh5
 
-[![Ansible Role Name](https://img.shields.io/ansible/role/51181?label=Role%20Name&logo=ansible&style=flat-square)](https://galaxy.ansible.com/justin_p/posh5)
-[![Ansible Quality Score](https://img.shields.io/ansible/quality/51181?label=Ansible%20Quality%20Score&logo=ansible&style=flat-square)](https://galaxy.ansible.com/justin_p/posh5)
-[![Ansible Role Downloads](https://img.shields.io/ansible/role/d/51181?label=Ansible%20Role%20Downloads&logo=ansible&style=flat-square)](https://galaxy.ansible.com/justin_p/posh5)
-[![Github Actions](https://img.shields.io/github/workflow/status/justin-p/ansible-role-posh5/CI?label=Github%20Actions&logo=github&style=flat-square)](https://github.com/justin-p/ansible-role-posh5/actions)
+[![Ansible Role Name](https://img.shields.io/ansible/role/d/justin_p/posh5?style=flat-square
+)](https://galaxy.ansible.com/justin_p/posh5)
+[![Github Actions](https://img.shields.io/github/actions/workflow/status/justin-p/ansible-role-posh5/main.yml?label=Github%20Actions&logo=github&style=flat-square)](https://github.com/justin-p/ansible-role-posh5/actions)
 
 This role will update PowerShell/Windows Management Framework to Version 5.1, enure that .Net applications use Strong TLS, configure NuGet, PowerShell Gallery, PowerShellGet and install the PSReadline Module.
 
